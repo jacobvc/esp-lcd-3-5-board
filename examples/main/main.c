@@ -1,5 +1,5 @@
 #include "esp_log.h"
-#include "bsp/esp-lcd-3.5-bsp.h"
+#include "bsp/esp-lcd-3-5-bsp.h"
 #include "lvgl.h"
 #include "ui/ui.h"
 

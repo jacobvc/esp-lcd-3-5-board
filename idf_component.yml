@@ -1,0 +1,13 @@
+version: "1.0.0"
+
+description: Board Support Package for Vince's 3.5 in touch system
+
+dependencies:
+  idf: ">=5.0"
+  esp_lcd_ili9488:
+    git: https://github.com/jacobvc/esp_lcd_ili9488.git
+
+  atanisoft/esp_lcd_touch_xpt2046: "~1.0.0"
+
+  esp_lvgl_port:
+    version: ^1

@@ -1,0 +1,8 @@
+version: "1.0.0"
+
+description: Board Support Package for Vince's 3.5 in touch system
+
+dependencies:
+  idf: ">=5.0"
+  esp-lcd-3.5-bsp:
+    git: https://github.com/jacobvc/esp-lcd-3.5-bsp.git

@@ -14,7 +14,7 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_ops.h"
 
-#include "bsp/lcd-3-5-connect.h"
+#include "bsp/esp-lcd-3-5-bsp.h"
 #include "esp_lcd_ili9488.h"
 #include "esp_lcd_touch_xpt2046.h"
 #include "esp_lvgl_port.h"

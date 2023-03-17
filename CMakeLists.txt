@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "lcd-3-5-connect.c"
+    SRCS "esp-lcd-3-5-bsp.c"
     INCLUDE_DIRS "include"
     PRIV_INCLUDE_DIRS "priv_include"
     REQUIRES driver

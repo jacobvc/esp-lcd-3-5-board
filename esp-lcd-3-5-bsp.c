@@ -102,7 +102,7 @@ static lv_disp_t *bsp_display_lcd_init(bool asLandscape)
         .bits_per_pixel = 18,
     };
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_new_panel_ili9488(io_handle, 
-      &panel_config, LCD_BUFFER_SIZE, &panel_handle, asLandscape));
+      &panel_config, LCD_BUFFER_SIZE, asLandscape, &panel_handle));
 
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_panel_reset(panel_handle));
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_panel_init(panel_handle));

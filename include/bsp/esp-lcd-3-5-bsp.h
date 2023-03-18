@@ -71,7 +71,15 @@ esp_err_t bsp_i2c_deinit(void);
 #define BSP_LCD_PIXEL_CLOCK_HZ     (40 * 1000 * 1000)
 
 #define BSP_LCD_TP_CS 16
-#define BSP_LCD_TP_INT 15
+//#define BSP_LCD_TP_INT 15
+
+#define BSP_SD_CS_PIN 22
+
+#define BSP_I2C_SCL 23
+#define BSP_I2C_SDA 21
+#define BSP_I2C_NUM I2C_NUM_0
+#define BSP_I2C_CLK_SPEED_HZ 100000
+
 
 /**
  * @brief Initialize display

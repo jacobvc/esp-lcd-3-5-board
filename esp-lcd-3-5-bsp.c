@@ -23,24 +23,24 @@
 static const char *TAG = "LCD35";
 
 esp_err_t bsp_i2c_init(void)
-{/*
+{
     const i2c_config_t i2c_conf = {
         .mode = I2C_MODE_MASTER,
-//        .sda_io_num = BSP_I2C_SDA,
+        .sda_io_num = BSP_I2C_SDA,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
-//        .scl_io_num = BSP_I2C_SCL,
+        .scl_io_num = BSP_I2C_SCL,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
-//        .master.clk_speed = BSP_I2C_CLK_SPEED_HZ
+        .master.clk_speed = BSP_I2C_CLK_SPEED_HZ
     };
-//    BSP_ERROR_CHECK_RETURN_ERR(i2c_param_config(BSP_I2C_NUM, &i2c_conf));
-//    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_install(BSP_I2C_NUM, i2c_conf.mode, 0, 0, 0));
-*/
+    BSP_ERROR_CHECK_RETURN_ERR(i2c_param_config(BSP_I2C_NUM, &i2c_conf));
+    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_install(BSP_I2C_NUM, i2c_conf.mode, 0, 0, 0));
+
     return ESP_OK;
 }
 
 esp_err_t bsp_i2c_deinit(void)
 {
-//    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_delete(BSP_I2C_NUM));
+    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_delete(BSP_I2C_NUM));
     return ESP_OK;
 }
 

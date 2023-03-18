@@ -1,5 +1,3 @@
-version: "1.0.0"
-
 description: SquseLine example app for esp-lcd-3-5-bsp
 
 dependencies:

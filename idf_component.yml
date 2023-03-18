@@ -1,6 +1,6 @@
 version: "1.0.0"
 
-description: Board Support Package for Vince's 3.5 in touch system
+description: Board Support Package for jacobvc's LCD 3.5 Connect board
 
 dependencies:
   idf: ">=5.0"

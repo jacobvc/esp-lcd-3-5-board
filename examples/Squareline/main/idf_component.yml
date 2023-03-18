@@ -1,6 +1,6 @@
 version: "1.0.0"
 
-description: Board Support Package for Vince's 3.5 in touch system
+description: SquseLine example app for esp-lcd-3-5-bsp
 
 dependencies:
   idf: ">=5.0"

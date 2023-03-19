@@ -15,7 +15,16 @@
 #include "esp_lvgl_port.h"
 #include "bsp_err_check.h"
 
-static const char *TAG = "LCD35";
+#include "esp_vfs_fat.h"
+#include "driver/sdspi_host.h"
+#include "driver/spi_common.h"
+#include "sdmmc_cmd.h"
+
+static const char *TAG = "ESP-LCD-3.5";
+
+sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
+sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+sdmmc_card_t *bsp_sdcard = NULL;    // Global SD card handler
 
 esp_err_t bsp_i2c_init(void)
 {
@@ -37,6 +46,96 @@ esp_err_t bsp_i2c_deinit(void)
 {
     BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_delete(BSP_I2C_NUM));
     return ESP_OK;
+}
+
+sdmmc_card_t *bsp_sdcard_mount(const char *mount_point, esp_err_t *pErr)
+{
+    // Options for mounting the filesystem.
+    // If format_if_mount_failed is set to true, SD card will be partitioned and
+    // formatted in case when mounting fails.
+    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
+        //.format_if_mount_failed = true,
+        .format_if_mount_failed = false,
+        .max_files = 5,
+        .allocation_unit_size = 16 * 1024
+    };
+
+    lvgl_port_lock(0);
+    *pErr = esp_vfs_fat_sdspi_mount(mount_point, &host, &slot_config, &mount_config, &bsp_sdcard);
+
+    if (*pErr != ESP_OK) {
+        lvgl_port_unlock();
+        if (*pErr == ESP_FAIL) {
+            ESP_LOGE(TAG, "Failed to mount filesystem. "
+                "If you want the card to be formatted, set the EXAMPLE_FORMAT_IF_MOUNT_FAILED menuconfig option.");
+        } else {
+            ESP_LOGE(TAG, "Failed to initialize the card (%s). "
+                "Make sure SD card lines have pull-up resistors in place.", esp_err_to_name(*pErr));
+        }
+        return NULL;
+    }
+    return bsp_sdcard;
+}
+
+esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point)
+{
+    esp_vfs_fat_sdcard_unmount(mount_point, card);
+    lvgl_port_unlock();
+
+    return ESP_OK;
+}
+
+// TEMPORARY for SD Card interface testing
+#include <stdio.h>
+#include "dirent.h"
+void sdcard_ls(sdmmc_card_t* card, const char *path)
+{
+    if (card) {
+        DIR* dir = opendir(path);
+        struct dirent* de = readdir(dir);
+        printf("ls %s\n", path);
+        while (de) {
+            printf("  %s\t\n", de->d_name);
+            de = readdir(dir);
+        }
+    }
+}
+
+void sdcard_init(void)
+{
+    esp_err_t err;
+    spi_device_handle_t spi;
+    ESP_LOGI(TAG, "Adding SD card to SHARED SPI");
+
+    spi_device_interface_config_t devcfg;
+    memset(&devcfg, 0, sizeof(devcfg));
+    
+    devcfg.clock_speed_hz = 10 * 1000 * 1000, //Clock out at 10 MHz
+    devcfg.mode = 0,                          //SPI mode 0
+    devcfg.spics_io_num = BSP_SD_CS_PIN,      //CS pin
+    devcfg.queue_size = 7,                    //We want to be able to queue 7 transactions at a time
+    // devcfg.pre_cb=lcd_spi_pre_transfer_callback,  //Specify pre-transfer callback to handle D/C line
+ 
+    // Initialize the slot without card detect (CD) and write protect (WP) signals.
+    // Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
+    host.slot = BSP_SHARED_SPI_HOST;
+    slot_config.gpio_cs = BSP_SD_CS_PIN;
+    slot_config.host_id = BSP_SHARED_SPI_HOST;
+
+    err = spi_bus_add_device(BSP_SHARED_SPI_HOST, &devcfg, &spi);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize bus.");
+        return;
+    }
+
+    char *mount_point = "/sdcard";
+    sdmmc_card_t *card = bsp_sdcard_mount(mount_point, &err);
+    if (card) {
+        // Card has been initialized, print its properties
+        sdmmc_card_print_info(stdout, card);
+        sdcard_ls(card, mount_point);
+        bsp_sdcard_unmount(card, mount_point);
+    }
 }
 
 // Bit number used to represent command and parameter
@@ -69,7 +168,7 @@ static lv_disp_t *bsp_display_lcd_init(bool asLandscape)
         .quadhd_io_num = GPIO_NUM_NC,
         .max_transfer_sz = 32768,
     };
-    BSP_ERROR_CHECK_RETURN_NULL(spi_bus_initialize(BSP_LCD_SPI_NUM, &buscfg, SPI_DMA_CH_AUTO));
+    BSP_ERROR_CHECK_RETURN_NULL(spi_bus_initialize(BSP_SHARED_SPI_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
     ESP_LOGI(TAG, "Install panel IO");
     
@@ -87,7 +186,7 @@ static lv_disp_t *bsp_display_lcd_init(bool asLandscape)
 
     // Attach the LCD to the SPI bus
     esp_lcd_panel_io_handle_t io_handle = NULL;
-    BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)BSP_LCD_SPI_NUM, &io_config, &io_handle));
+    BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)BSP_SHARED_SPI_HOST, &io_config, &io_handle));
 
     ESP_LOGI(TAG, "Install LCD driver of ili(9488)");
     esp_lcd_panel_handle_t panel_handle = NULL;
@@ -153,7 +252,7 @@ static lv_indev_t *bsp_display_indev_init(lv_disp_t *disp, bool asLandscape)
     };
     
     esp_lcd_panel_io_handle_t tp_io_handle = NULL;
-	ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)BSP_LCD_SPI_NUM, &io_config, &tp_io_handle));
+	ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)BSP_SHARED_SPI_HOST, &io_config, &tp_io_handle));
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_touch_new_spi_xpt2046(tp_io_handle, &tp_cfg, &tp));
     assert(tp);
 
@@ -188,6 +287,8 @@ lv_disp_t *bsp_display_start(bool asLandscape)
     BSP_ERROR_CHECK_RETURN_NULL(lvgl_port_init(&lvgl_cfg));
     BSP_NULL_CHECK(disp = bsp_display_lcd_init(asLandscape), NULL);
     BSP_NULL_CHECK(bsp_display_indev_init(disp, asLandscape), NULL);
+
+    sdcard_init();
     return disp;
 }
 

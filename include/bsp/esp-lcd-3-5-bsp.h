@@ -1,14 +1,9 @@
-/*
- * SPDX-FileCopyrightText: 2022 Espressif Systems (Shanghai) CO LTD
- *
- * SPDX-License-Identifier: CC0-1.0
- */
-
 #pragma once
 
 #include "sdkconfig.h"
 #include "driver/gpio.h"
 #include "driver/i2c.h"
+#include "driver/sdmmc_host.h"
 #include "lvgl.h"
 
 /**************************************************************************************************
@@ -43,6 +38,32 @@ esp_err_t bsp_i2c_init(void);
  */
 esp_err_t bsp_i2c_deinit(void);
 
+/**
+ * @brief Mount SD card to virtual file system
+ * Sets *perr to:
+ *      - ESP_OK on success
+ *      - ESP_ERR_INVALID_STATE if esp_vfs_fat_sdmmc_mount was already called
+ *      - ESP_ERR_NO_MEM if memory can not be allocated
+ *      - ESP_FAIL if partition can not be mounted
+ *      - other error codes from SDMMC or SPI drivers, SDMMC protocol, or FATFS drivers
+ * @return
+ *      - Pointer to mounted card
+ */
+sdmmc_card_t *bsp_sdcard_mount(const char *mount_point, esp_err_t *pErr);
+
+/**
+ * @brief Unmount SD card from virtual file system
+ *
+ * @return
+ *      - ESP_OK on success
+ *      - ESP_ERR_NOT_FOUND if the partition table does not contain FATFS partition with given label
+ *      - ESP_ERR_INVALID_STATE if esp_vfs_fat_spiflash_mount was already called
+ *      - ESP_ERR_NO_MEM if memory can not be allocated
+ *      - ESP_FAIL if partition can not be mounted
+ *      - other error codes from wear levelling library, SPI flash driver, or FATFS drivers
+ */
+esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
+
 /**************************************************************************************************
  *
  * LCD interface
@@ -56,10 +77,11 @@ esp_err_t bsp_i2c_deinit(void);
  *
  * Display's backlight must be enabled explicitly by calling bsp_display_backlight_on()
  **************************************************************************************************/
+#define BSP_SHARED_SPI_HOST VSPI_HOST
+
 #define BSP_LCD_SPI_CLK  17
 #define BSP_LCD_SPI_MOSI 4
 #define BSP_LCD_SPI_MISO 2
-#define BSP_LCD_SPI_NUM VSPI_HOST
 #define BSP_LCD_DC 5
 #define BSP_LCD_CS 19
 

@@ -114,11 +114,14 @@ void sdcard_init(void)
     devcfg.mode = 0,                          //SPI mode 0
     devcfg.spics_io_num = BSP_SD_CS_PIN,      //CS pin
     devcfg.queue_size = 7,                    //We want to be able to queue 7 transactions at a time
-    // devcfg.pre_cb=lcd_spi_pre_transfer_callback,  //Specify pre-transfer callback to handle D/C line
+    // devcfg.pre_cb Not used
  
-    // Initialize the slot without card detect (CD) and write protect (WP) signals.
-    // Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
+    // Initialize the slot without card detect (CD)
     host.slot = BSP_SHARED_SPI_HOST;
+    // WARNING default freq is not reliable! Half-default works and 
+    // is much faster than SDMMC_FREQ_PROBING
+    host.max_freq_khz = SDMMC_FREQ_DEFAULT / 2;
+
     slot_config.gpio_cs = BSP_SD_CS_PIN;
     slot_config.host_id = BSP_SHARED_SPI_HOST;
 

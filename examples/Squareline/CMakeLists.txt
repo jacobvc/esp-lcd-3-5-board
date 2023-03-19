@@ -6,4 +6,4 @@ cmake_minimum_required(VERSION 3.5)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 add_compile_options("-Wno-format")
-project(BSP-Dev-Project)
+project(SquareLine-Example-Project)

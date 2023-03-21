@@ -6,13 +6,13 @@
 #include "driver/sdmmc_host.h"
 #include "lvgl.h"
 
-/**************************************************************************************************
- *  ESP-BOX pinout
- **************************************************************************************************/
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/**************************************************************************************************
+ *  pinout
+ **************************************************************************************************/
 #define BSP_SHARED_SPI_HOST VSPI_HOST
 
 #define BSP_LCD_SPI_CLK  17
@@ -111,7 +111,7 @@ esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  * @brief Initialize display
  *
  * This function initializes SPI, display controller and starts LVGL handling task.
- * LCD backlight must be enabled separately by calling bsp_display_brightness_set()
+ * Note that the SPI interface for the display-mounted SD card is also initialized.
  *
  * @return Pointer to LVGL display or NULL when error occured
  */
@@ -132,39 +132,6 @@ bool bsp_display_lock(uint32_t timeout_ms);
  */
 void bsp_display_unlock(void);
 
-/**
- * @brief Set display's brightness
- *
- * Brightness is controlled with PWM signal to a pin controling backlight.
- *
- * @param[in] brightness_percent Brightness in [%]
- * @return
- *      - ESP_OK                On success
- *      - ESP_ERR_INVALID_ARG   Parameter error
- */
-esp_err_t bsp_display_brightness_set(int brightness_percent);
-
-/**
- * @brief Turn on display backlight
- *
- * Display must be already initialized by calling bsp_display_start()
- *
- * @return
- *      - ESP_OK                On success
- *      - ESP_ERR_INVALID_ARG   Parameter error
- */
-esp_err_t bsp_display_backlight_on(void);
-
-/**
- * @brief Turn off display backlight
- *
- * Display must be already initialized by calling bsp_display_start()
- *
- * @return
- *      - ESP_OK                On success
- *      - ESP_ERR_INVALID_ARG   Parameter error
- */
-esp_err_t bsp_display_backlight_off(void);
 
 #ifdef __cplusplus
 }

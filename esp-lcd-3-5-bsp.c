@@ -268,21 +268,6 @@ static lv_indev_t *bsp_display_indev_init(lv_disp_t *disp, bool asLandscape)
     return lvgl_port_add_touch(&touch_cfg);
 }
 
-esp_err_t bsp_display_brightness_set(int brightness_percent)
-{
-    return ESP_ERR_NOT_SUPPORTED;
-}
-
-esp_err_t bsp_display_backlight_off(void)
-{
-    return bsp_display_brightness_set(0);
-}
-
-esp_err_t bsp_display_backlight_on(void)
-{
-    return bsp_display_brightness_set(100);
-}
-
 lv_disp_t *bsp_display_start(bool asLandscape)
 {
     lv_disp_t *disp = NULL;
@@ -293,11 +278,6 @@ lv_disp_t *bsp_display_start(bool asLandscape)
 
     sdcard_init();
     return disp;
-}
-
-void bsp_display_rotate(lv_disp_t *disp, lv_disp_rot_t rotation)
-{
-    lv_disp_set_rotation(disp, rotation);
 }
 
 bool bsp_display_lock(uint32_t timeout_ms)

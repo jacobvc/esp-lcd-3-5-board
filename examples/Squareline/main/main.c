@@ -23,9 +23,8 @@ void app_main(void)
 
     /* Initialize display and LVGL */
     lv_disp_t *disp = bsp_display_start(true);
- 
-    /* Set default display brightness */
-    bsp_display_brightness_set(APP_DISP_DEFAULT_BRIGHTNESS);
+    // THIS DOESN'T WORK
+    // lv_disp_set_rotation(disp, LV_DISP_ROT_180);
 
     /* Add and show objects on display */
     app_lvgl_display();

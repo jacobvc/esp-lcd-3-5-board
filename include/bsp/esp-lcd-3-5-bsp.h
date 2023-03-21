@@ -13,17 +13,39 @@
 extern "C" {
 #endif
 
+#define BSP_SHARED_SPI_HOST VSPI_HOST
+
+#define BSP_LCD_SPI_CLK  17
+#define BSP_LCD_SPI_MOSI 4
+#define BSP_LCD_SPI_MISO 2
+#define BSP_LCD_DC 5
+#define BSP_LCD_CS 19
+
+#define BSP_LCD_RST 18
+
+#define BSP_LCD_H_RES              (320)
+#define BSP_LCD_V_RES              (480)
+#define LCD_BUFFER_SIZE (320 * 30)
+#define BSP_LCD_PIXEL_CLOCK_HZ     (40 * 1000 * 1000)
+
+#define BSP_LCD_TP_CS 16
+//#define BSP_LCD_TP_INT 15
+
+#define BSP_SD_CS_PIN 22
+
+#define BSP_I2C_SCL 23
+#define BSP_I2C_SDA 21
+#define BSP_I2C_NUM I2C_NUM_0
+#define BSP_I2C_CLK_SPEED_HZ 100000
+
+
 /**************************************************************************************************
  *
  * I2C interface
  *
- * There are multiple devices connected to I2C peripheral:)
- *  - LCD Touch controller
+ * There are multiple devices connected to I2C periphera
  *
  * After initialization of I2C, use BSP_I2C_NUM macro when creating I2C devices drivers ie.:
- * \code{.c}
- * es8311_handle_t es8311_dev = es8311_create(BSP_I2C_NUM, ES8311_ADDRRES_0);
- * \endcode
  **************************************************************************************************/
 
 /**
@@ -37,6 +59,14 @@ esp_err_t bsp_i2c_init(void);
  *
  */
 esp_err_t bsp_i2c_deinit(void);
+
+/**************************************************************************************************
+ *
+ * SD Card interface
+ *
+ * Utilize the shared SPI SD card on the LCD Display
+ *
+ **************************************************************************************************/
 
 /**
  * @brief Mount SD card to virtual file system
@@ -68,40 +98,14 @@ esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  *
  * LCD interface
  *
- * This display has 7inch and RA8875 display controller.
- * It features 16-bit colors, 800x480 resolution and capacitive touch controller GT911.
+ * This display has 3.5 inch and ili9488 display controller.
+ * It features 16-bit colors, 320x480 resolution and capacitive touch controller XPT2046.
  *
  * LVGL is used as graphics library. LVGL is NOT thread safe, therefore the user must take LVGL mutex
  * by calling bsp_display_lock() before calling and LVGL API (lv_...) and then give the mutex with
  * bsp_display_unlock().
  *
- * Display's backlight must be enabled explicitly by calling bsp_display_backlight_on()
  **************************************************************************************************/
-#define BSP_SHARED_SPI_HOST VSPI_HOST
-
-#define BSP_LCD_SPI_CLK  17
-#define BSP_LCD_SPI_MOSI 4
-#define BSP_LCD_SPI_MISO 2
-#define BSP_LCD_DC 5
-#define BSP_LCD_CS 19
-
-#define BSP_LCD_RST 18
-
-#define BSP_LCD_H_RES              (320)
-#define BSP_LCD_V_RES              (480)
-#define LCD_BUFFER_SIZE (320 * 30)
-#define BSP_LCD_PIXEL_CLOCK_HZ     (40 * 1000 * 1000)
-
-#define BSP_LCD_TP_CS 16
-//#define BSP_LCD_TP_INT 15
-
-#define BSP_SD_CS_PIN 22
-
-#define BSP_I2C_SCL 23
-#define BSP_I2C_SDA 21
-#define BSP_I2C_NUM I2C_NUM_0
-#define BSP_I2C_CLK_SPEED_HZ 100000
-
 
 /**
  * @brief Initialize display

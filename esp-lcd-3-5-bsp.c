@@ -26,29 +26,29 @@ sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
 sdmmc_host_t host = SDSPI_HOST_DEFAULT();
 sdmmc_card_t *bsp_sdcard = NULL;    // Global SD card handler
 
-esp_err_t bsp_i2c_init(void)
+esp_err_t bsp_lcd_i2c_init(void)
 {
     const i2c_config_t i2c_conf = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = BSP_I2C_SDA,
+        .sda_io_num = BSP_LCD_I2C_SDA,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
-        .scl_io_num = BSP_I2C_SCL,
+        .scl_io_num = BSP_LCD_I2C_SCL,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = BSP_I2C_CLK_SPEED_HZ
+        .master.clk_speed = BSP_LCD_I2C_CLK_SPEED_HZ
     };
-    BSP_ERROR_CHECK_RETURN_ERR(i2c_param_config(BSP_I2C_NUM, &i2c_conf));
-    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_install(BSP_I2C_NUM, i2c_conf.mode, 0, 0, 0));
+    BSP_ERROR_CHECK_RETURN_ERR(i2c_param_config(BSP_LCD_I2C_NUM, &i2c_conf));
+    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_install(BSP_LCD_I2C_NUM, i2c_conf.mode, 0, 0, 0));
 
     return ESP_OK;
 }
 
-esp_err_t bsp_i2c_deinit(void)
+esp_err_t bsp_lcd_i2c_deinit(void)
 {
-    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_delete(BSP_I2C_NUM));
+    BSP_ERROR_CHECK_RETURN_ERR(i2c_driver_delete(BSP_LCD_I2C_NUM));
     return ESP_OK;
 }
 
-sdmmc_card_t *bsp_sdcard_mount(const char *mount_point, esp_err_t *pErr)
+sdmmc_card_t *bsp_lcd_sdcard_mount(const char *mount_point, esp_err_t *pErr)
 {
     // Options for mounting the filesystem.
     // If format_if_mount_failed is set to true, SD card will be partitioned and
@@ -77,7 +77,7 @@ sdmmc_card_t *bsp_sdcard_mount(const char *mount_point, esp_err_t *pErr)
     return bsp_sdcard;
 }
 
-esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point)
+esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point)
 {
     esp_vfs_fat_sdcard_unmount(mount_point, card);
     lvgl_port_unlock();
@@ -132,12 +132,12 @@ void sdcard_init(void)
     }
 
     char *mount_point = "/sdcard";
-    sdmmc_card_t *card = bsp_sdcard_mount(mount_point, &err);
+    sdmmc_card_t *card = bsp_lcd_sdcard_mount(mount_point, &err);
     if (card) {
         // Card has been initialized, print its properties
         sdmmc_card_print_info(stdout, card);
         sdcard_ls(card, mount_point);
-        bsp_sdcard_unmount(card, mount_point);
+        bsp_lcd_sdcard_unmount(card, mount_point);
     }
 }
 
@@ -158,7 +158,7 @@ static bool notify_lvgl_flush_ready(esp_lcd_panel_io_handle_t panel_io, esp_lcd_
 }
 
 
-static lv_disp_t *bsp_display_lcd_init(bool asLandscape)
+static lv_disp_t *display_lcd_init(bool asLandscape)
 {
     static lv_disp_t *pDisp = NULL;
 
@@ -231,7 +231,7 @@ static lv_disp_t *bsp_display_lcd_init(bool asLandscape)
     return pDisp;
 }
 
-static lv_indev_t *bsp_display_indev_init(lv_disp_t *disp, bool asLandscape)
+static lv_indev_t *display_indev_init(lv_disp_t *disp, bool asLandscape)
 {
     esp_lcd_touch_handle_t tp;
 
@@ -268,24 +268,24 @@ static lv_indev_t *bsp_display_indev_init(lv_disp_t *disp, bool asLandscape)
     return lvgl_port_add_touch(&touch_cfg);
 }
 
-lv_disp_t *bsp_display_start(bool asLandscape)
+lv_disp_t *bsp_lcd_start(bool asLandscape)
 {
     lv_disp_t *disp = NULL;
     const lvgl_port_cfg_t lvgl_cfg = ESP_LVGL_PORT_INIT_CONFIG();
     BSP_ERROR_CHECK_RETURN_NULL(lvgl_port_init(&lvgl_cfg));
-    BSP_NULL_CHECK(disp = bsp_display_lcd_init(asLandscape), NULL);
-    BSP_NULL_CHECK(bsp_display_indev_init(disp, asLandscape), NULL);
+    BSP_NULL_CHECK(disp = display_lcd_init(asLandscape), NULL);
+    BSP_NULL_CHECK(display_indev_init(disp, asLandscape), NULL);
 
     sdcard_init();
     return disp;
 }
 
-bool bsp_display_lock(uint32_t timeout_ms)
+bool bsp_lcd_lock(uint32_t timeout_ms)
 {
     return lvgl_port_lock(timeout_ms);
 }
 
-void bsp_display_unlock(void)
+void bsp_lcd_unlock(void)
 {
     lvgl_port_unlock();
 }

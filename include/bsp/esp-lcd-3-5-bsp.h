@@ -33,10 +33,10 @@ extern "C" {
 
 #define BSP_SD_CS_PIN 22
 
-#define BSP_I2C_SCL 23
-#define BSP_I2C_SDA 21
-#define BSP_I2C_NUM I2C_NUM_0
-#define BSP_I2C_CLK_SPEED_HZ 100000
+#define BSP_LCD_I2C_SCL 23
+#define BSP_LCD_I2C_SDA 21
+#define BSP_LCD_I2C_NUM I2C_NUM_0
+#define BSP_LCD_I2C_CLK_SPEED_HZ 100000
 
 
 /**************************************************************************************************
@@ -45,20 +45,20 @@ extern "C" {
  *
  * There are multiple devices connected to I2C periphera
  *
- * After initialization of I2C, use BSP_I2C_NUM macro when creating I2C devices drivers ie.:
+ * After initialization of I2C, use BSP_LCD_I2C_NUM macro when creating I2C devices drivers ie.:
  **************************************************************************************************/
 
 /**
  * @brief Init I2C driver
  *
  */
-esp_err_t bsp_i2c_init(void);
+esp_err_t bsp_lcd_i2c_init(void);
 
 /**
  * @brief Deinit I2C driver and free its resources
  *
  */
-esp_err_t bsp_i2c_deinit(void);
+esp_err_t bsp_lcd_i2c_deinit(void);
 
 /**************************************************************************************************
  *
@@ -79,7 +79,7 @@ esp_err_t bsp_i2c_deinit(void);
  * @return
  *      - Pointer to mounted card
  */
-sdmmc_card_t *bsp_sdcard_mount(const char *mount_point, esp_err_t *pErr);
+sdmmc_card_t *bsp_lcd_sdcard_mount(const char *mount_point, esp_err_t *pErr);
 
 /**
  * @brief Unmount SD card from virtual file system
@@ -92,7 +92,7 @@ sdmmc_card_t *bsp_sdcard_mount(const char *mount_point, esp_err_t *pErr);
  *      - ESP_FAIL if partition can not be mounted
  *      - other error codes from wear levelling library, SPI flash driver, or FATFS drivers
  */
-esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
+esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
 
 /**************************************************************************************************
  *
@@ -102,8 +102,8 @@ esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  * It features 16-bit colors, 320x480 resolution and capacitive touch controller XPT2046.
  *
  * LVGL is used as graphics library. LVGL is NOT thread safe, therefore the user must take LVGL mutex
- * by calling bsp_display_lock() before calling and LVGL API (lv_...) and then give the mutex with
- * bsp_display_unlock().
+ * by calling bsp_lcd_lock() before calling and LVGL API (lv_...) and then give the mutex with
+ * bsp_lcd_unlock().
  *
  **************************************************************************************************/
 
@@ -115,7 +115,7 @@ esp_err_t bsp_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  *
  * @return Pointer to LVGL display or NULL when error occured
  */
-lv_disp_t *bsp_display_start(bool asLandscape);
+lv_disp_t *bsp_lcd_start(bool asLandscape);
 
 /**
  * @brief Take LVGL mutex
@@ -124,13 +124,13 @@ lv_disp_t *bsp_display_start(bool asLandscape);
  * @return true  Mutex was taken
  * @return false Mutex was NOT taken
  */
-bool bsp_display_lock(uint32_t timeout_ms);
+bool bsp_lcd_lock(uint32_t timeout_ms);
 
 /**
  * @brief Give LVGL mutex
  *
  */
-void bsp_display_unlock(void);
+void bsp_lcd_unlock(void);
 
 
 #ifdef __cplusplus

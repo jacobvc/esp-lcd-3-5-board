@@ -6,7 +6,7 @@ The primary motiviation for this was to use some existing hardware (and LVGL v7x
 
 The Squareline example project implements a trivial Squareline generated appl;ication.
 
-This is called a DIY system because one can take an ESP32 development board, a [Lcd3.5Connectors board](https://github.com/jacobvc/ESP32-Hardware-Boards/tree/main/Lcd3.5Connectors) (less than $5 for 3 boards from OSH Park), and a 3.5 inch touch screen display. Anyone with limited soldering skills can assemble this to utilize one side of the development board to create a touch screen system with a SD Card interface.
+This is called a DIY system because one can take an ESP32 development board, a [Lcd3.5Connectors board](https://github.com/jacobvc/ESP32-Hardware-Boards/tree/main/Lcd3.5Connectors) (less than $5 for 3 boards from OSH Park), and a 3.5 inch touch screen display. Anyone with limited soldering skills can assemble this to utilize one half of the development board for a touch screen system with a SD Card interface.
 
 The other side of the ESP32 can even be populated with one of the other connectivity boards for various combinations of physical I/O.
 

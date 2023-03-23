@@ -22,9 +22,9 @@ void app_main(void)
     bsp_lcd_i2c_init();
 
     /* Initialize display and LVGL */
-    lv_disp_t *disp = bsp_lcd_start(true);
+    lv_disp_t *disp = bsp_lcd_start(false);
     // THIS DOESN'T WORK
-    // lv_disp_set_rotation(disp, LV_DISP_ROT_180);
+     lv_disp_set_rotation(disp, LV_DISP_ROT_NONE);
 
     /* Add and show objects on display */
     app_lvgl_display();

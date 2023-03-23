@@ -95,7 +95,7 @@ void sdcard_ls(sdmmc_card_t* card, const char *path)
         struct dirent* de = readdir(dir);
         printf("ls %s\n", path);
         while (de) {
-            printf("  %s\t\n", de->d_name);
+            printf("  %s%s\t\n", de->d_name, de->d_type == DT_DIR ? "/" : "");
             de = readdir(dir);
         }
     }

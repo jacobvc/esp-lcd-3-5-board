@@ -2,8 +2,7 @@
 
 This is a board support package for a DIY system using the [Lcd3.5Connectors board](https://github.com/jacobvc/ESP32-Hardware-Boards/tree/main/Lcd3.5Connectors). This board uses one entire side of an ESP32 Development Module to host a [320 x 480 touch screen display and SD Card](http://www.lcdwiki.com/3.5inch_SPI_Module_ILI9488_SKU:MSP3520) as well as an I2C interface.
 
-The primary motiviation for this was to use some existing hardware (and LVGL v7x library) with Squareline, and it was immediately obvious 
-how that it would be very painful to use Squareline with LVGL pre-8.0. In the process, it also made sense to move into managed components.
+The primary motiviation for this was to use some existing hardware (and LVGL v7x library) with a Squareline generated screen. It was immediately obvious that it would be very painful to use Squareline with LVGL pre-8.0. In the process, it also made sense to move into managed components.
 
 The Squareline example project implements a trivial Squareline generated appl;ication.
 

@@ -18,21 +18,15 @@ void sdcard_ls(sdmmc_card_t* card, const char *path)
         DIR* dir = opendir(path);
         struct dirent* de = readdir(dir);
         lv_label_set_text(ui_lblPath, path);
-        //printf("ls %s\n", path);
-        char *buf = calloc(MAX_DIR_BYTES, 1);
+        lv_textarea_set_text(ui_txaFiles, "");
         while (de) {
-            if (strlen(buf) + strlen(de->d_name) + 3 < MAX_DIR_BYTES) {
-                strcat(buf, de->d_name);
-                if (de->d_type == DT_DIR) {
-                    strcat(buf, "/");
-                }
-                strcat(buf, "\n");
+            lv_textarea_add_text(ui_txaFiles, de->d_name);
+            if (de->d_type == DT_DIR) {
+                lv_textarea_add_text(ui_txaFiles, "/");
             }
-            //printf("  %s%s\t\n", de->d_name, de->d_type == DT_DIR ? "/" : "");
+            lv_textarea_add_text(ui_txaFiles, "\n");
             de = readdir(dir);
         }
-        lv_textarea_add_text(ui_txaFiles, buf);
-        free(buf);
     }
     else {
         lv_label_set_text(ui_lblPath, "Can't read SD Card");

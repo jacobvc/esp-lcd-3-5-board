@@ -85,22 +85,6 @@ esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point)
     return ESP_OK;
 }
 
-// TEMPORARY for SD Card interface testing
-#include <stdio.h>
-#include "dirent.h"
-void sdcard_ls(sdmmc_card_t* card, const char *path)
-{
-    if (card) {
-        DIR* dir = opendir(path);
-        struct dirent* de = readdir(dir);
-        printf("ls %s\n", path);
-        while (de) {
-            printf("  %s%s\t\n", de->d_name, de->d_type == DT_DIR ? "/" : "");
-            de = readdir(dir);
-        }
-    }
-}
-
 void sdcard_init(void)
 {
     esp_err_t err;
@@ -136,7 +120,7 @@ void sdcard_init(void)
     if (card) {
         // Card has been initialized, print its properties
         sdmmc_card_print_info(stdout, card);
-        sdcard_ls(card, mount_point);
+
         bsp_lcd_sdcard_unmount(card, mount_point);
     }
 }

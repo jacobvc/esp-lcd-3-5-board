@@ -51,6 +51,10 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Squareline backups and autosave
+autosave/
+backup/
+
 # VS Code config and esp32 generated files and build paths
 .vscode
 sdkconfig

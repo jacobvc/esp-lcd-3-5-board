@@ -60,11 +60,9 @@ sdmmc_card_t *bsp_lcd_sdcard_mount(const char *mount_point, esp_err_t *pErr)
         .allocation_unit_size = 16 * 1024
     };
 
-    lvgl_port_lock(0);
     *pErr = esp_vfs_fat_sdspi_mount(mount_point, &host, &slot_config, &mount_config, &bsp_sdcard);
 
     if (*pErr != ESP_OK) {
-        lvgl_port_unlock();
         if (*pErr == ESP_FAIL) {
             ESP_LOGE(TAG, "Failed to mount filesystem. "
                 "If you want the card to be formatted, set the EXAMPLE_FORMAT_IF_MOUNT_FAILED menuconfig option.");
@@ -80,7 +78,6 @@ sdmmc_card_t *bsp_lcd_sdcard_mount(const char *mount_point, esp_err_t *pErr)
 esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point)
 {
     esp_vfs_fat_sdcard_unmount(mount_point, card);
-    lvgl_port_unlock();
 
     return ESP_OK;
 }

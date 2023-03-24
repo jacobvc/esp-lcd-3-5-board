@@ -12,24 +12,24 @@
 #define MAX_DIR_BYTES 4096
 #define MOUNT_POINT "/sd"
 
-void sdcard_ls(sdmmc_card_t* card, const char *path)
+void sdcard_ls(sdmmc_card_t *card, const char *path)
 {
-    if (card) {
-        DIR* dir = opendir(path);
-        struct dirent* de = readdir(dir);
+    if (card)
+    {
+        DIR *dir = opendir(path);
+        struct dirent *de = readdir(dir);
         lv_label_set_text(ui_lblPath, path);
         lv_textarea_set_text(ui_txaFiles, "");
-        while (de) {
+        while (de)
+        {
             lv_textarea_add_text(ui_txaFiles, de->d_name);
-            if (de->d_type == DT_DIR) {
+            if (de->d_type == DT_DIR)
+            {
                 lv_textarea_add_text(ui_txaFiles, "/");
             }
             lv_textarea_add_text(ui_txaFiles, "\n");
             de = readdir(dir);
         }
-    }
-    else {
-        lv_label_set_text(ui_lblPath, "Can't read SD Card");
     }
 }
 
@@ -58,7 +58,13 @@ void app_main(void)
 
     esp_err_t err;
     sdmmc_card_t *card = bsp_lcd_sdcard_mount(MOUNT_POINT, &err);
-    sdcard_ls(card, MOUNT_POINT);
-    bsp_lcd_sdcard_unmount(card, MOUNT_POINT);
-
+    if (card)
+    {
+        sdcard_ls(card, MOUNT_POINT);
+        bsp_lcd_sdcard_unmount(card, MOUNT_POINT);
+    }
+    else
+    {
+        lv_label_set_text(ui_lblPath, "Can't read SD Card");
+    }
 }

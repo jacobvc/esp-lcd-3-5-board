@@ -1495,7 +1495,7 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "exportFolderPath": "C:\\Users\\vince\\Documents\\dev\\experimental\\squarelinetest",
+    "exportFolderPath": "C:\\dev\\squarelinetest",
     "backup_cnt": 22,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.3",

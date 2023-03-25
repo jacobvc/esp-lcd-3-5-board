@@ -115,7 +115,7 @@ esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  *
  * @return Pointer to LVGL display or NULL when error occured
  */
-lv_disp_t *bsp_lcd_start(bool asLandscape);
+lv_disp_t *bsp_lcd_start();
 
 /**
  * @brief Take LVGL mutex

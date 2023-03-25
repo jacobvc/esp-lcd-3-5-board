@@ -139,7 +139,7 @@ static bool notify_lvgl_flush_ready(esp_lcd_panel_io_handle_t panel_io, esp_lcd_
 }
 
 
-static lv_disp_t *display_lcd_init(bool asLandscape)
+static lv_disp_t *display_lcd_init()
 {
     static lv_disp_t *pDisp = NULL;
 
@@ -180,7 +180,7 @@ static lv_disp_t *display_lcd_init(bool asLandscape)
         .bits_per_pixel = 18,
     };
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_new_panel_ili9488(io_handle, 
-      &panel_config, LCD_BUFFER_SIZE, asLandscape, &panel_handle));
+      &panel_config, LCD_BUFFER_SIZE, &panel_handle));
 
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_panel_reset(panel_handle));
     BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_panel_init(panel_handle));
@@ -193,8 +193,8 @@ static lv_disp_t *display_lcd_init(bool asLandscape)
         .panel_handle = panel_handle,
         .buffer_size = LCD_BUFFER_SIZE,
         .double_buffer = true,
-        .hres = asLandscape ? BSP_LCD_V_RES : BSP_LCD_H_RES,
-        .vres = asLandscape ? BSP_LCD_H_RES : BSP_LCD_V_RES,
+        .hres = BSP_LCD_H_RES,
+        .vres = BSP_LCD_V_RES,
         .monochrome = false,
         /* Rotation values must be same as used in esp_lcd for initial settings of the screen */
         .rotation = {
@@ -212,7 +212,7 @@ static lv_disp_t *display_lcd_init(bool asLandscape)
     return pDisp;
 }
 
-static lv_indev_t *display_indev_init(lv_disp_t *disp, bool asLandscape)
+static lv_indev_t *display_indev_init(lv_disp_t *disp)
 {
     esp_lcd_touch_handle_t tp;
 
@@ -229,9 +229,9 @@ static lv_indev_t *display_indev_init(lv_disp_t *disp, bool asLandscape)
             .interrupt = 0,
         },
         .flags = {
-            .swap_xy = asLandscape ? 1 : 0,
-            .mirror_x = asLandscape ? 0 : 0,
-            .mirror_y = asLandscape ? 0 : 1,
+            .swap_xy = 0,
+            .mirror_x = 0,
+            .mirror_y = 1,
         },
     };
     
@@ -249,13 +249,13 @@ static lv_indev_t *display_indev_init(lv_disp_t *disp, bool asLandscape)
     return lvgl_port_add_touch(&touch_cfg);
 }
 
-lv_disp_t *bsp_lcd_start(bool asLandscape)
+lv_disp_t *bsp_lcd_start()
 {
     lv_disp_t *disp = NULL;
     const lvgl_port_cfg_t lvgl_cfg = ESP_LVGL_PORT_INIT_CONFIG();
     BSP_ERROR_CHECK_RETURN_NULL(lvgl_port_init(&lvgl_cfg));
-    BSP_NULL_CHECK(disp = display_lcd_init(asLandscape), NULL);
-    BSP_NULL_CHECK(display_indev_init(disp, asLandscape), NULL);
+    BSP_NULL_CHECK(disp = display_lcd_init(), NULL);
+    BSP_NULL_CHECK(display_indev_init(disp), NULL);
 
     sdcard_init();
     return disp;

@@ -12,6 +12,6 @@ This is called a DIY system because one can get an ESP32 development board, a [L
 
 The other half of the ESP32 can even be populated with one of the other connectivity boards for various combinations of physical I/O.
 
-Note: I will probablty be putting together board support packages for those other boards as well intendted to make a single device supported by two BSP's.
+Note: I will probablty be putting together board support packages for those other boards as well intended to make a single device supported by two BSP's.
 
 

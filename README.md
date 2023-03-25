@@ -6,7 +6,7 @@ The primary motiviation for this was to use some existing hardware (and LVGL v7x
 
 The provided Squareline example project implements a trivial Squareline Studio generated application.
 
-The custom_board is a Squareline Studio's [Open Board Platform](https://docs.squareline.io/docs/obp).
+The custom_board is a board definition for Squareline Studio's [Open Board Platform](https://docs.squareline.io/docs/obp).
 
 This is called a DIY system because one can get an ESP32 development board, a [Lcd3.5Connectors board](https://github.com/jacobvc/ESP32-Hardware-Boards/tree/main/Lcd3.5Connectors) (less than $5 for 3 boards from OSH Park), and a 3.5 inch touch screen display. Then anyone with limited soldering skills can assemble this to utilize one half of the development board for a touch screen system with a SD Card interface.
 

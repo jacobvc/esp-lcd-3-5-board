@@ -4,3 +4,5 @@ dependencies:
   idf: ">=5.0"
   esp-lcd-3-5-diy:
     git: https://github.com/jacobvc/esp-lcd-3-5-diy.git
+  BMX280: 
+    git: https://github.com/utkumaden/esp-idf-bmx280

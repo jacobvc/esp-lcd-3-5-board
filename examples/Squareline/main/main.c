@@ -5,9 +5,15 @@
 #include "string.h"
 
 #define TAG "MAIN"
-#define APP_DISP_DEFAULT_BRIGHTNESS 50
 
-/* SD Card test */
+/***
+ *      ____   ____     ____                 _   _____           _   
+ *     / ___| |  _ \   / ___| __ _  _ __  __| | |_   _|___  ___ | |_ 
+ *     \___ \ | | | | | |    / _` || '__|/ _` |   | | / _ \/ __|| __|
+ *      ___) || |_| | | |___| (_| || |  | (_| |   | ||  __/\__ \| |_ 
+ *     |____/ |____/   \____|\__,_||_|   \__,_|   |_| \___||___/ \__|
+ *                                                                   
+ */
 #include <stdio.h>
 #include "dirent.h"
 #define MAX_DIR_BYTES 4096
@@ -42,7 +48,14 @@ void BtnLsClicked(lv_event_t * e)
     }
 }
 
-/* I2C test using BMP280 */
+/***
+ *      ___  ____    ____   _____           _   
+ *     |_ _||___ \  / ___| |_   _|___  ___ | |_ 
+ *      | |   __) || |       | | / _ \/ __|| __|
+ *      | |  / __/ | |___    | ||  __/\__ \| |_ 
+ *     |___||_____| \____|   |_| \___||___/ \__|
+ *                                              
+ */
 #include "bmx280.h"
 
 bmx280_t* bmx280 = NULL;
@@ -86,30 +99,29 @@ void BtnSampleClicked(lv_event_t * e)
     }
 }
 
-
-void app_lvgl_display(void)
-{
-    bsp_lcd_lock(0);
-
-    ui_init();
-
-    bsp_lcd_unlock();
-}
-
+/***
+ *                        _        
+ *      _ __ ___    __ _ (_) _ __  
+ *     | '_ ` _ \  / _` || || '_ \ 
+ *     | | | | | || (_| || || | | |
+ *     |_| |_| |_| \__,_||_||_| |_|
+ *                                 
+ */
 void app_main(void)
 {
-    /* Initialize I2C */
-    bsp_lcd_i2c_init();
-
-    /* Initialize display and LVGL */
+    // Initialize display and LVGL
     lv_disp_t *disp = bsp_lcd_start(false);
-    lv_disp_set_rotation(disp, LV_DISP_ROT_90);
+    lv_disp_set_rotation(disp, LV_DISP_ROT_90); // Landscape
 
-    /* Add and show objects on display */
-    app_lvgl_display();
+    // Lock the display and iniitialize the SquareLine ui
+    bsp_lcd_lock(0);
+    ui_init();
+    bsp_lcd_unlock();
 
-    ESP_LOGI(TAG, "Initialization done.");
+    ESP_LOGI(TAG, "Display Initialization done.");
 
+    // Initialize I2C and BMP280
+    bsp_lcd_i2c_init();
     bmp280Init();
     if (!bmx280) {
         lv_label_set_text(ui_lblPressure, "BMP280 NOT FOUND");

@@ -110,14 +110,14 @@ void ui_Screen1_screen_init(void)
     ui_Label1 = lv_label_create(ui_Screen1);
     lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label1, 29);
+    lv_obj_set_x(ui_Label1, 26);
     lv_obj_set_y(ui_Label1, 96);
     lv_label_set_text(ui_Label1, "Pressure");
 
     ui_lblTemp = lv_label_create(ui_Screen1);
     lv_obj_set_width(ui_lblTemp, 200);
     lv_obj_set_height(ui_lblTemp, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_lblTemp, 31);
+    lv_obj_set_x(ui_lblTemp, 35);
     lv_obj_set_y(ui_lblTemp, 73);
     lv_label_set_text(ui_lblTemp, "");
     lv_obj_set_style_border_color(ui_lblTemp, lv_color_hex(0x640000), LV_PART_MAIN | LV_STATE_DEFAULT);

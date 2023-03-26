@@ -1660,7 +1660,7 @@
                 "flags": 17,
                 "strtype": "OBJECT/Position",
                 "intarray": [
-                  29,
+                  26,
                   96
                 ],
                 "InheritedType": 7
@@ -1910,7 +1910,7 @@
                 "flags": 17,
                 "strtype": "OBJECT/Position",
                 "intarray": [
-                  31,
+                  35,
                   73
                 ],
                 "InheritedType": 7
@@ -3412,7 +3412,7 @@
     "theme_color1": 5,
     "theme_color2": 0,
     "exportFolderPath": "C:\\Users\\vince\\Documents\\dev\\github\\esp-lcd-3-5-diy\\examples\\Squareline\\main\\ui",
-    "backup_cnt": 25,
+    "backup_cnt": 26,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.3",
     "callfuncsexport": "C_FILE",

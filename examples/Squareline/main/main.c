@@ -4,7 +4,7 @@
 #include "ui/ui.h"
 #include "string.h"
 
-#define TAG "MAIN"
+#define TAG "LCD 3.5 Example"
 
 /***
  *      ____   ____     ____                 _   _____           _   
@@ -99,6 +99,17 @@ void BtnSampleClicked(lv_event_t * e)
     }
 }
 
+
+/***
+ *      ____                _     _  _         _      _     _              _   
+ *     | __ )   __ _   ___ | | __| |(_)  __ _ | |__  | |_  | |_  ___  ___ | |_ 
+ *     |  _ \  / _` | / __|| |/ /| || | / _` || '_ \ | __| | __|/ _ \/ __|| __|
+ *     | |_) || (_| || (__ |   < | || || (_| || | | || |_  | |_|  __/\__ \| |_ 
+ *     |____/  \__,_| \___||_|\_\|_||_| \__, ||_| |_| \__|  \__|\___||___/ \__|
+ *                                      |___/                                  
+ */
+#define DEFAULT_BACKLIGHT 60
+
 void SldBacklightChanged(lv_event_t * e)
 {
     lv_obj_t * slider = lv_event_get_target(e);
@@ -120,6 +131,8 @@ void SldBacklightChanged(lv_event_t * e)
 void app_main(void)
 {
     // Initialize display and LVGL
+    // WARNING the display is initialized with the backlight off to launch flicker
+    // Call bsp_lcd_set_brightness() expicitly to make it visible
     lv_disp_t *disp = bsp_lcd_start(false);
     lv_disp_set_rotation(disp, LV_DISP_ROT_90); // Landscape
 
@@ -128,11 +141,6 @@ void app_main(void)
     ui_init();
     bsp_lcd_unlock();
 
-    lv_slider_set_value(ui_sldBacklight, 50, LV_ANIM_OFF);
-    bsp_lcd_set_brightness(50);
-
-    ESP_LOGI(TAG, "Display Initialization done.");
-
     // Initialize I2C and BMP280
     bsp_lcd_i2c_init();
     bmp280Init();
@@ -140,4 +148,10 @@ void app_main(void)
         lv_label_set_text(ui_lblPressure, "BMP280 NOT FOUND");
         lv_label_set_text(ui_lblTemp, "BMP280 NOT FOUND");
     }
+
+    // Turn on backlight
+    lv_slider_set_value(ui_sldBacklight, DEFAULT_BACKLIGHT, LV_ANIM_OFF);
+    bsp_lcd_set_brightness(DEFAULT_BACKLIGHT);
+
+    ESP_LOGI(TAG, "Startup Complete.");
 }

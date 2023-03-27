@@ -20,7 +20,7 @@
 #include "driver/spi_common.h"
 #include "sdmmc_cmd.h"
 
-static const char *TAG = "ESP-LCD-3.5";
+static const char *TAG = "ESP LCD 3.5 DIY";
 
 static const ledc_mode_t BACKLIGHT_LEDC_MODE = LEDC_LOW_SPEED_MODE;
 static const ledc_channel_t BACKLIGHT_LEDC_CHANNEL = LEDC_CHANNEL_0;

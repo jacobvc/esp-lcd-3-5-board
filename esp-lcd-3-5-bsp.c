@@ -111,7 +111,7 @@ void sdcard_init(void)
     
     devcfg.clock_speed_hz = 10 * 1000 * 1000, //Clock out at 10 MHz
     devcfg.mode = 0,                          //SPI mode 0
-    devcfg.spics_io_num = BSP_SD_CS_PIN,      //CS pin
+    devcfg.spics_io_num = BSP_SDCARD_CS_PIN,  //CS pin
     devcfg.queue_size = 7,                    //We want to be able to queue 7 transactions at a time
     // devcfg.pre_cb Not used
  
@@ -121,7 +121,7 @@ void sdcard_init(void)
     // is much faster than SDMMC_FREQ_PROBING
     host.max_freq_khz = SDMMC_FREQ_DEFAULT / 2;
 
-    slot_config.gpio_cs = BSP_SD_CS_PIN;
+    slot_config.gpio_cs = BSP_SDCARD_CS_PIN;
     slot_config.host_id = BSP_SHARED_SPI_HOST;
 
     err = spi_bus_add_device(BSP_SHARED_SPI_HOST, &devcfg, &spi);
@@ -285,7 +285,7 @@ static lv_indev_t *display_indev_init(lv_disp_t *disp)
 {
     esp_lcd_touch_handle_t tp;
 
-    const esp_lcd_panel_io_spi_config_t io_config = ESP_LCD_TOUCH_IO_SPI_XPT2046_CONFIG(BSP_LCD_TP_CS_PIN);
+    const esp_lcd_panel_io_spi_config_t io_config = ESP_LCD_TOUCH_IO_SPI_XPT2046_CONFIG(BSP_TOUCH_CS_PIN);
  
     // Initialize touch 
     const esp_lcd_touch_config_t tp_cfg = {

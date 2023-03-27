@@ -10,35 +10,37 @@
 extern "C" {
 #endif
 
-/**************************************************************************************************
- *  pinout
- **************************************************************************************************/
-#define BSP_SHARED_SPI_HOST VSPI_HOST
+/*
+ *  Pin configuration
+ */
 
-#define BSP_LCD_SPI_CLK_PIN  17
-#define BSP_LCD_SPI_MOSI_PIN 4
-#define BSP_LCD_SPI_MISO_PIN 2
-#define BSP_LCD_DC_PIN 5
-#define BSP_LCD_CS_PIN 19
+// LCD
+#define BSP_LCD_SPI_CLK_PIN     17
+#define BSP_LCD_SPI_MOSI_PIN    4
+#define BSP_LCD_SPI_MISO_PIN    2
+#define BSP_LCD_DC_PIN          5
+#define BSP_LCD_CS_PIN          19
+#define BSP_LCD_RST_PIN         18
+#define BSP_LCD_BACKLIGHT_PIN   15
+// Touch input
+#define BSP_TOUCH_CS_PIN        16
+// SD Card
+#define BSP_SDCARD_CS_PIN       22
+// I2C
+#define BSP_LCD_I2C_SCL_PIN     23
+#define BSP_LCD_I2C_SDA_PIN     21
 
-#define BSP_LCD_RST_PIN 18
-
-#define BSP_LCD_H_RES              (320)
-#define BSP_LCD_V_RES              (480)
-#define LCD_BUFFER_SIZE (320 * 30)
-#define BSP_LCD_PIXEL_CLOCK_HZ     (40 * 1000 * 1000)
-
-#define BSP_LCD_TP_CS_PIN 16
-
-#define BSP_LCD_BACKLIGHT_PIN 15
-
-#define BSP_SD_CS_PIN 22
-
-#define BSP_LCD_I2C_SCL_PIN 23
-#define BSP_LCD_I2C_SDA_PIN 21
-#define BSP_LCD_I2C_NUM I2C_NUM_0
+// LCD config definitions
+#define BSP_LCD_H_RES           (320)
+#define BSP_LCD_V_RES           (480)
+#define LCD_BUFFER_SIZE         (320 * 30)
+#define BSP_LCD_PIXEL_CLOCK_HZ  (40 * 1000 * 1000)
+// I2C definitions
 #define BSP_LCD_I2C_CLK_SPEED_HZ 100000
 
+// ESP32 Peripherals
+#define BSP_LCD_I2C_NUM         I2C_NUM_0
+#define BSP_SHARED_SPI_HOST     VSPI_HOST
 
 /**************************************************************************************************
  *

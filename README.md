@@ -10,7 +10,7 @@ The [custom_board](custom_board) is a board definition for Squareline Studio's [
 
 This is called a DIY system because one can get an ESP32 development board, a [Lcd3.5Connectors board](https://github.com/jacobvc/ESP32-Hardware-Boards/tree/main/Lcd3.5Connectors) (less than $5 for 3 boards from OSH Park), and a 3.5 inch touch screen display. Then anyone with limited soldering skills can assemble this to utilize one half of the development board for a touch screen system with a SD Card interface.
 
-The other half of the ESP32 can even be populated with one of the other connectivity boards for various combinations of physical I/O.
+The other half of the ESP32 can be populated with one of the other connectivity boards for various combinations of physical I/O.
 
 Note: I will probablty be putting together board support packages for those other boards as well intended to make a single device supported by two BSP's.
 

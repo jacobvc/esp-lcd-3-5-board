@@ -1,6 +1,6 @@
 # SquareLine example
 
-This example is intended to demonstrate all of the features supported by esp-lcd-3-5-diy. The display shown here is SquareLine generated (and the Squareline project files are included to potentially be used as a ). 
+This example is intended to demonstrate all of the features supported by esp-lcd-3-5-diy. The display shown here is SquareLine generated (and the Squareline project files are included to potentially be used as a starting point). 
 
 First the display is initialized, and the SquareLine screen is displayed
 

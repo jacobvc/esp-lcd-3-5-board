@@ -106,7 +106,7 @@ void SldBacklightChanged(lv_event_t * e)
     //lv_snprintf(buf, sizeof(buf), "%d%%", (int)lv_slider_get_value(slider));
     //lv_label_set_text(slider_label, buf);
     //lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
-    display_brightness_set((int)lv_slider_get_value(slider));
+    bsp_lcd_set_brightness((int)lv_slider_get_value(slider));
 }
 
 /***
@@ -129,7 +129,7 @@ void app_main(void)
     bsp_lcd_unlock();
 
     lv_slider_set_value(ui_sldBacklight, 50, LV_ANIM_OFF);
-    display_brightness_set(50);
+    bsp_lcd_set_brightness(50);
 
     ESP_LOGI(TAG, "Display Initialization done.");
 

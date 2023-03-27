@@ -29,7 +29,8 @@ extern "C" {
 #define BSP_LCD_PIXEL_CLOCK_HZ     (40 * 1000 * 1000)
 
 #define BSP_LCD_TP_CS 16
-//#define BSP_LCD_TP_INT 15
+
+#define BSP_LCD_BACKLIGHT_PIN 15
 
 #define BSP_SD_CS_PIN 22
 
@@ -116,6 +117,14 @@ esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  * @return Pointer to LVGL display or NULL when error occured
  */
 lv_disp_t *bsp_lcd_start();
+
+/**
+ * @brief Initialize display
+ *
+ * Set the brightness of the LCD display as integer percentage
+ *
+ */
+void bsp_lcd_set_brightness(int brightness_percentage);
 
 /**
  * @brief Take LVGL mutex

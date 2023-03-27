@@ -22,6 +22,13 @@
 
 static const char *TAG = "ESP-LCD-3.5";
 
+static const ledc_mode_t BACKLIGHT_LEDC_MODE = LEDC_LOW_SPEED_MODE;
+static const ledc_channel_t BACKLIGHT_LEDC_CHANNEL = LEDC_CHANNEL_0;
+static const ledc_timer_t BACKLIGHT_LEDC_TIMER = LEDC_TIMER_1;
+static const ledc_timer_bit_t BACKLIGHT_LEDC_TIMER_RESOLUTION = LEDC_TIMER_10_BIT;
+static const uint32_t BACKLIGHT_LEDC_FRQUENCY = 5000;
+
+
 sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
 sdmmc_host_t host = SDSPI_HOST_DEFAULT();
 sdmmc_card_t *bsp_sdcard = NULL;    // Global SD card handler
@@ -212,6 +219,55 @@ static lv_disp_t *display_lcd_init()
     return pDisp;
 }
 
+static void backlight_init() 
+{
+    
+    const ledc_channel_config_t LCD_backlight_channel =
+    {
+        .gpio_num = (gpio_num_t)BSP_LCD_BACKLIGHT_PIN,
+        .speed_mode = BACKLIGHT_LEDC_MODE,
+        .channel = BACKLIGHT_LEDC_CHANNEL,
+        .intr_type = LEDC_INTR_DISABLE,
+        .timer_sel = BACKLIGHT_LEDC_TIMER,
+        .duty = 0,
+        .hpoint = 0,
+        .flags = 
+        {
+            .output_invert = 0
+        }
+    };
+    const ledc_timer_config_t LCD_backlight_timer =
+    {
+        .speed_mode = BACKLIGHT_LEDC_MODE,
+        .duty_resolution = BACKLIGHT_LEDC_TIMER_RESOLUTION,
+        .timer_num = BACKLIGHT_LEDC_TIMER,
+        .freq_hz = BACKLIGHT_LEDC_FRQUENCY,
+        .clk_cfg = LEDC_AUTO_CLK
+    };
+    ESP_LOGI(TAG, "Initializing LEDC for backlight pin: %d", BSP_LCD_BACKLIGHT_PIN);
+
+    ESP_ERROR_CHECK(ledc_timer_config(&LCD_backlight_timer));
+    ESP_ERROR_CHECK(ledc_channel_config(&LCD_backlight_channel));
+}
+
+void bsp_lcd_set_brightness(int brightness_percentage)
+{
+    if (brightness_percentage > 100)
+    {
+        brightness_percentage = 100;
+    }    
+    else if (brightness_percentage < 0)
+    {
+        brightness_percentage = 0;
+    }
+    ESP_LOGI(TAG, "Setting backlight to %d%%", brightness_percentage);
+
+    // LEDC resolution set to 10bits, thus: 100% = 1023
+    uint32_t duty_cycle = (1023 * brightness_percentage) / 100;
+    ESP_ERROR_CHECK(ledc_set_duty(BACKLIGHT_LEDC_MODE, BACKLIGHT_LEDC_CHANNEL, duty_cycle));
+    ESP_ERROR_CHECK(ledc_update_duty(BACKLIGHT_LEDC_MODE, BACKLIGHT_LEDC_CHANNEL));
+}
+
 static lv_indev_t *display_indev_init(lv_disp_t *disp)
 {
     esp_lcd_touch_handle_t tp;
@@ -256,6 +312,7 @@ lv_disp_t *bsp_lcd_start()
     BSP_ERROR_CHECK_RETURN_NULL(lvgl_port_init(&lvgl_cfg));
     BSP_NULL_CHECK(disp = display_lcd_init(), NULL);
     BSP_NULL_CHECK(display_indev_init(disp), NULL);
+    backlight_init();
 
     sdcard_init();
     return disp;

@@ -22,24 +22,32 @@
 
 static const char *TAG = "ESP LCD 3.5 DIY";
 
+/*
+ * Backlight definitions
+ */
 static const ledc_mode_t BACKLIGHT_LEDC_MODE = LEDC_LOW_SPEED_MODE;
 static const ledc_channel_t BACKLIGHT_LEDC_CHANNEL = LEDC_CHANNEL_0;
 static const ledc_timer_t BACKLIGHT_LEDC_TIMER = LEDC_TIMER_1;
 static const ledc_timer_bit_t BACKLIGHT_LEDC_TIMER_RESOLUTION = LEDC_TIMER_10_BIT;
 static const uint32_t BACKLIGHT_LEDC_FRQUENCY = 5000;
 
-
+/*
+ * SD Card definitions
+ */
 sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
 sdmmc_host_t host = SDSPI_HOST_DEFAULT();
 sdmmc_card_t *bsp_sdcard = NULL;    // Global SD card handler
 
+/*
+ * I2C Support
+ */
 esp_err_t bsp_lcd_i2c_init(void)
 {
     const i2c_config_t i2c_conf = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = BSP_LCD_I2C_SDA,
+        .sda_io_num = BSP_LCD_I2C_SDA_PIN,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
-        .scl_io_num = BSP_LCD_I2C_SCL,
+        .scl_io_num = BSP_LCD_I2C_SCL_PIN,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
         .master.clk_speed = BSP_LCD_I2C_CLK_SPEED_HZ
     };
@@ -55,6 +63,9 @@ esp_err_t bsp_lcd_i2c_deinit(void)
     return ESP_OK;
 }
 
+/*
+ * SD Card support
+ */
 sdmmc_card_t *bsp_lcd_sdcard_mount(const char *mount_point, esp_err_t *pErr)
 {
     // Options for mounting the filesystem.
@@ -129,14 +140,13 @@ void sdcard_init(void)
     }
 }
 
-// Bit number used to represent command and parameter
+/*
+ * LCD Support
+ */
+// Number of bits used to represent command and parameter
 #define LCD_CMD_BITS           8
 #define LCD_PARAM_BITS         8
 
-/* The component calls esp_lcd_panel_draw_bitmap API for send data to the screen. There must be called 
-  lvgl_port_flush_ready(disp) after each transaction to display. The best way is to use on_color_trans_done 
-  callback from esp_lcd IO config structure. 
-*/
 static bool notify_lvgl_flush_ready(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_io_event_data_t *edata, void *user_ctx)
 {
     //ESP_LOGD(TAG, "Flush ready");
@@ -152,9 +162,9 @@ static lv_disp_t *display_lcd_init()
 
     ESP_LOGI(TAG, "Initialize SPI bus");
     const spi_bus_config_t buscfg = {
-        .sclk_io_num = BSP_LCD_SPI_CLK,
-        .mosi_io_num = BSP_LCD_SPI_MOSI,
-        .miso_io_num = BSP_LCD_SPI_MISO,
+        .sclk_io_num = BSP_LCD_SPI_CLK_PIN,
+        .mosi_io_num = BSP_LCD_SPI_MOSI_PIN,
+        .miso_io_num = BSP_LCD_SPI_MISO_PIN,
         .quadwp_io_num = GPIO_NUM_NC,
         .quadhd_io_num = GPIO_NUM_NC,
         .max_transfer_sz = 32768,
@@ -164,8 +174,8 @@ static lv_disp_t *display_lcd_init()
     ESP_LOGI(TAG, "Install panel IO");
     
     const esp_lcd_panel_io_spi_config_t io_config = {
-        .dc_gpio_num = BSP_LCD_DC,
-        .cs_gpio_num = BSP_LCD_CS,
+        .dc_gpio_num = BSP_LCD_DC_PIN,
+        .cs_gpio_num = BSP_LCD_CS_PIN,
         .pclk_hz = BSP_LCD_PIXEL_CLOCK_HZ,
         .lcd_cmd_bits = LCD_CMD_BITS,
         .lcd_param_bits = LCD_PARAM_BITS,
@@ -182,7 +192,7 @@ static lv_disp_t *display_lcd_init()
     ESP_LOGI(TAG, "Install LCD driver of ili(9488)");
     esp_lcd_panel_handle_t panel_handle = NULL;
     const esp_lcd_panel_dev_config_t panel_config = {
-        .reset_gpio_num = BSP_LCD_RST,
+        .reset_gpio_num = BSP_LCD_RST_PIN,
         .color_space = ESP_LCD_COLOR_SPACE_BGR,
         .bits_per_pixel = 18,
     };
@@ -219,6 +229,9 @@ static lv_disp_t *display_lcd_init()
     return pDisp;
 }
 
+/*
+ * Backlight Support
+ */
 static void backlight_init() 
 {
     
@@ -272,7 +285,7 @@ static lv_indev_t *display_indev_init(lv_disp_t *disp)
 {
     esp_lcd_touch_handle_t tp;
 
-    const esp_lcd_panel_io_spi_config_t io_config = ESP_LCD_TOUCH_IO_SPI_XPT2046_CONFIG(BSP_LCD_TP_CS);
+    const esp_lcd_panel_io_spi_config_t io_config = ESP_LCD_TOUCH_IO_SPI_XPT2046_CONFIG(BSP_LCD_TP_CS_PIN);
  
     // Initialize touch 
     const esp_lcd_touch_config_t tp_cfg = {
@@ -305,6 +318,9 @@ static lv_indev_t *display_indev_init(lv_disp_t *disp)
     return lvgl_port_add_touch(&touch_cfg);
 }
 
+/*
+ * LCD Start and launch
+ */
 lv_disp_t *bsp_lcd_start()
 {
     lv_disp_t *disp = NULL;

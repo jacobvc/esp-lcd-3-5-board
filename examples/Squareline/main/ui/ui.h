@@ -28,6 +28,9 @@ extern lv_obj_t * ui_Label4;
 void ui_event_btnLs(lv_event_t * e);
 extern lv_obj_t * ui_btnLs;
 extern lv_obj_t * ui_Label5;
+extern lv_obj_t * ui_Label6;
+void ui_event_sldBacklight(lv_event_t * e);
+extern lv_obj_t * ui_sldBacklight;
 extern lv_obj_t * ui____initial_actions0;
 
 

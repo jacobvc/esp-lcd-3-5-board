@@ -12,6 +12,7 @@ extern "C" {
 
 void BtnSampleClicked(lv_event_t * e);
 void BtnLsClicked(lv_event_t * e);
+void SldBacklightChanged(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

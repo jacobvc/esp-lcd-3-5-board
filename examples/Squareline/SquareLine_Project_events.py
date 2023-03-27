@@ -6,3 +6,7 @@ def BtnSampleClicked(event_struct):
 def BtnLsClicked(event_struct):
     return
 
+
+def SldBacklightChanged(event_struct):
+    return
+

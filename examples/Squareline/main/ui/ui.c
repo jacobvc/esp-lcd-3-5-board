@@ -22,6 +22,9 @@ lv_obj_t * ui_Label4;
 void ui_event_btnLs(lv_event_t * e);
 lv_obj_t * ui_btnLs;
 lv_obj_t * ui_Label5;
+lv_obj_t * ui_Label6;
+void ui_event_sldBacklight(lv_event_t * e);
+lv_obj_t * ui_sldBacklight;
 lv_obj_t * ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -51,6 +54,14 @@ void ui_event_btnLs(lv_event_t * e)
         BtnLsClicked(e);
     }
 }
+void ui_event_sldBacklight(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        SldBacklightChanged(e);
+    }
+}
 
 ///////////////////// SCREENS ////////////////////
 void ui_Screen1_screen_init(void)
@@ -76,7 +87,7 @@ void ui_Screen1_screen_init(void)
 
     ui_btnSample = lv_btn_create(ui_Screen1);
     lv_obj_set_width(ui_btnSample, 92);
-    lv_obj_set_height(ui_btnSample, 28);
+    lv_obj_set_height(ui_btnSample, 37);
     lv_obj_set_x(ui_btnSample, -161);
     lv_obj_set_y(ui_btnSample, 9);
     lv_obj_set_align(ui_btnSample, LV_ALIGN_CENTER);
@@ -91,9 +102,9 @@ void ui_Screen1_screen_init(void)
 
     ui_txaFiles = lv_textarea_create(ui_Screen1);
     lv_obj_set_width(ui_txaFiles, 231);
-    lv_obj_set_height(ui_txaFiles, 225);
-    lv_obj_set_x(ui_txaFiles, 118);
-    lv_obj_set_y(ui_txaFiles, 6);
+    lv_obj_set_height(ui_txaFiles, 214);
+    lv_obj_set_x(ui_txaFiles, 117);
+    lv_obj_set_y(ui_txaFiles, -3);
     lv_obj_set_align(ui_txaFiles, LV_ALIGN_CENTER);
 
     lv_obj_set_style_text_color(ui_txaFiles, lv_color_hex(0x808080), LV_PART_CURSOR | LV_STATE_DEFAULT);
@@ -143,9 +154,9 @@ void ui_Screen1_screen_init(void)
 
     ui_btnLs = lv_btn_create(ui_Screen1);
     lv_obj_set_width(ui_btnLs, 92);
-    lv_obj_set_height(ui_btnLs, 29);
-    lv_obj_set_x(ui_btnLs, 54);
-    lv_obj_set_y(ui_btnLs, 136);
+    lv_obj_set_height(ui_btnLs, 36);
+    lv_obj_set_x(ui_btnLs, 58);
+    lv_obj_set_y(ui_btnLs, 132);
     lv_obj_set_align(ui_btnLs, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_btnLs, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_btnLs, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -156,8 +167,23 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_align(ui_Label5, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label5, "List Files");
 
+    ui_Label6 = lv_label_create(ui_Screen1);
+    lv_obj_set_width(ui_Label6, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label6, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label6, 26);
+    lv_obj_set_y(ui_Label6, 209);
+    lv_label_set_text(ui_Label6, "Backlight");
+
+    ui_sldBacklight = lv_slider_create(ui_Screen1);
+    lv_slider_set_range(ui_sldBacklight, 10, 100);
+    lv_obj_set_width(ui_sldBacklight, 188);
+    lv_obj_set_height(ui_sldBacklight, 10);
+    lv_obj_set_x(ui_sldBacklight, 38);
+    lv_obj_set_y(ui_sldBacklight, 238);
+
     lv_obj_add_event_cb(ui_btnSample, ui_event_btnSample, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_btnLs, ui_event_btnLs, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_sldBacklight, ui_event_sldBacklight, LV_EVENT_ALL, NULL);
 
 }
 

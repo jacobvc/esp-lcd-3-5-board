@@ -321,10 +321,11 @@ static lv_indev_t *display_indev_init(lv_disp_t *disp)
 /*
  * LCD Start and launch
  */
-lv_disp_t *bsp_lcd_start()
+lv_disp_t *bsp_lcd_start(int extra_stack)
 {
     lv_disp_t *disp = NULL;
-    const lvgl_port_cfg_t lvgl_cfg = ESP_LVGL_PORT_INIT_CONFIG();
+    lvgl_port_cfg_t lvgl_cfg = ESP_LVGL_PORT_INIT_CONFIG();
+    lvgl_cfg.task_stack += extra_stack;
     BSP_ERROR_CHECK_RETURN_NULL(lvgl_port_init(&lvgl_cfg));
     BSP_NULL_CHECK(disp = display_lcd_init(), NULL);
     BSP_NULL_CHECK(display_indev_init(disp), NULL);

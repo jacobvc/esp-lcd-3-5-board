@@ -116,9 +116,10 @@ esp_err_t bsp_lcd_sdcard_unmount(sdmmc_card_t* card, const char *mount_point);
  * This function initializes SPI, display controller and starts LVGL handling task.
  * Note that the SPI interface for the display-mounted SD card is also initialized.
  *
+ * @param Amount of extra stack, in addition  to default stack
  * @return Pointer to LVGL display or NULL when error occured
  */
-lv_disp_t *bsp_lcd_start();
+lv_disp_t *bsp_lcd_start(int extra_stack);
 
 /**
  * @brief Set display brightness

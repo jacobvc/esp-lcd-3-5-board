@@ -4,6 +4,16 @@ This example is intended to demonstrate the features supported by esp-lcd-3-5-di
 
 First the display is initialized, and the SquareLine screen is displayed
 
+The SquareLine example is configured to fire events from button clicks
+
+    void BtnSampleClicked(lv_event_t * e);
+    void BtnLsClicked(lv_event_t * e);
+
+And to fire an event from changing slider position
+
+    void SldBacklightChanged(lv_event_t * e);
+
+
 ![screenshot](assets/example.png)
 
 Then I2C is initalized. For this example, it is assumed that a BMP280 (or BME280) is plugged into the I2C connector. If not, a "BMP280 not found" message is shown.

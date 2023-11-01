@@ -119,7 +119,7 @@ void sdcard_init(void)
     host.slot = BSP_SHARED_SPI_HOST;
     // WARNING default freq is not reliable! Half-default works and 
     // is much faster than SDMMC_FREQ_PROBING
-    host.max_freq_khz = SDMMC_FREQ_DEFAULT / 2;
+    host.max_freq_khz = SDMMC_FREQ_PROBING;
 
     slot_config.gpio_cs = BSP_SDCARD_CS_PIN;
     slot_config.host_id = BSP_SHARED_SPI_HOST;
